@@ -1,0 +1,6 @@
+@hangfire_demo_appointments_reminder_HostAddress = http://localhost:5138
+
+GET {{hangfire_demo_appointments_reminder_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
