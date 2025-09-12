@@ -1,4 +1,15 @@
+using Hangfire;
+using Hangfire.MemoryStorage;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHangfire(config =>
+{
+    config.UseSimpleAssemblyNameTypeSerializer()
+          .UseRecommendedSerializerSettings()
+          .UseMemoryStorage();
+});
+builder.Services.AddHangfireServer();
 
 // Add services to the container.
 
@@ -13,6 +24,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseHangfireDashboard("/hangfire");
 
 app.UseHttpsRedirection();
 
