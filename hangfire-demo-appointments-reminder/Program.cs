@@ -32,7 +32,7 @@ app.UseHangfireDashboard("/hangfire");
 
 RecurringJob.AddOrUpdate<AppointmentReminderJob>(
     recurringJobId: "daily-demo-reminders",
-    methodCall: job => job.RunDemoAsync(),
+    methodCall: job => job.RunDemoAsync("demo-test@test.com", "Recurrent test job", "This is the demo recurrent job!"),
     cronExpression: "* * * * *"
 );
 
@@ -75,13 +75,13 @@ app.MapPost("/api/reminders/schedule", (ScheduleReminderRequest req, IBackground
 .WithName("ScheduleReminder")
 .WithOpenApi();
 
-// Upsert job
+// Upsert recurrent job
 app.MapPost("/api/reminders/recurring", (CreateRecurringRequest req) =>
 {
     if (string.IsNullOrWhiteSpace(req.Id) || string.IsNullOrWhiteSpace(req.Cron))
         return Results.BadRequest("Id and Cron are required.");
 
-    RecurringJob.AddOrUpdate<AppointmentReminderJob>(req.Id, job => job.RunDemoAsync(), req.Cron);
+    RecurringJob.AddOrUpdate<AppointmentReminderJob>(req.Id, job => job.RunDemoAsync(req.Email, req.Subject, req.Message), req.Cron);
     return Results.Ok(new { id = req.Id, cron = req.Cron });
 })
 .WithName("CreateOrUpdateRecurring")

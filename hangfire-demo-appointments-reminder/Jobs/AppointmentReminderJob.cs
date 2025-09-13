@@ -7,11 +7,11 @@ namespace hangfire_demo_appointments_reminder.Jobs
         private readonly INotificationService _notifier = notifier;
         private readonly ILogger<AppointmentReminderJob> _logger = logger;
 
-        public async Task RunDemoAsync()
+        public async Task RunDemoAsync(string email, string subject, string message)
         {
             var now = DateTimeOffset.UtcNow;
-            _logger.LogInformation("Running demo reminder job at {Time}", now);
-            await _notifier.SendEmailAsync("demo@example.com", "Daily Reminder", $"Hello! This is your daily reminder at {now:u}");
+            _logger.LogInformation("📩 [AppointmentReminderJob] Sending reminder to {Email} at {Time}", email, now);
+            await _notifier.SendEmailAsync(email, subject, message);
         }
     }
 }
